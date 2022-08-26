@@ -6,8 +6,8 @@ from django.core import exceptions
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ('email','first_name','last_name','username','mobile','password')
-        extra_kwargs={'email':{'write_only':True,'required':True},'password': {'write_only': True},}
+        fields = ('id','email','first_name','last_name','mobile','password')
+        extra_kwargs={'email':{'required':True},'password': {'write_only': True},}
         
 
     def validate(self,data):
@@ -23,16 +23,18 @@ class UserSerializer(serializers.ModelSerializer):
         return data
     
     def create(self,validated_data):
+        first_name =validated_data['first_name']
+        last_name = validated_data['last_name']
         user=Account.objects.create_user(
             email= validated_data['email'],
-            first_name = validated_data['first_name'],
-            last_name= validated_data['last_name'],
+            first_name = first_name,
+            last_name= last_name,
             mobile = validated_data['mobile'],
             password = validated_data['password'], 
         )
         return user
 
-# class UserSerializer(serializers.ModelSerializer):
+# class UserSerializer1(serializers.ModelSerializer):
 #     class Meta:
 #         model = Account
 #         fields = (
